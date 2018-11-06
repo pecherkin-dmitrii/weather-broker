@@ -24,18 +24,22 @@ public class WeatherRequestServiceImpl implements WeatherRequestService {
 
     public Weather getWeather(String city) throws IOException {
         LOGGER.info("Getting weather info for city {}.", city);
-        
+
         String url = String.format(blankUrl, city);
         String response = restTemplate.getForObject(url, String.class);
 
         JsonNode jsonNode = new ObjectMapper().readTree(response);
-        Weather weather = new Weather();
-        weather.setCity(jsonNode.get("query").get("results").get("channel")
-            .get("location").get("city").textValue());
-        weather.setTemperature(jsonNode.get("query").get("results").get("channel")
-            .get("item").get("condition").get("temp").asDouble());
-        weather.setDescription(jsonNode.get("query").get("results").get("channel")
-            .get("item").get("condition").get("text").textValue());
-        return weather;
+        if (jsonNode.get("query").get("results").isNull()) {
+            return null;
+        } else {
+            Weather weather = new Weather();
+            weather.setCity(jsonNode.get("query").get("results").get("channel")
+                .get("location").get("city").textValue());
+            weather.setTemperature(jsonNode.get("query").get("results").get("channel")
+                .get("item").get("condition").get("temp").asDouble());
+            weather.setDescription(jsonNode.get("query").get("results").get("channel")
+                .get("item").get("condition").get("text").textValue());
+            return weather;
+        }
     }
 }

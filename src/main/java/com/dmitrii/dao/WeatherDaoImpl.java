@@ -9,13 +9,13 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 @Repository
-@Transactional
 public class WeatherDaoImpl implements WeatherDao {
 
     @Resource
     private SessionFactory sessionFactory;
 
     @Override
+    @Transactional
     public void save(Weather weather) {
         Session session = sessionFactory.openSession();
 
@@ -25,6 +25,7 @@ public class WeatherDaoImpl implements WeatherDao {
     }
 
     @Override
+    @Transactional
     public void delete(Weather weather) {
         Session session = sessionFactory.openSession();
 

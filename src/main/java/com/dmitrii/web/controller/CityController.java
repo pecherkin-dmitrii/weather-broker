@@ -29,6 +29,8 @@ public class CityController {
     @RequestMapping(value = "/addCity", method = RequestMethod.GET)
     public void addCity(@RequestParam("city") String city) throws IOException {
         Weather weather = weatherRequestService.getWeather(city);
-        jmsTemplate.convertAndSend(destination, weather);
+        if (weather != null) {
+            jmsTemplate.convertAndSend(destination, weather);
+        }
     }
 }
