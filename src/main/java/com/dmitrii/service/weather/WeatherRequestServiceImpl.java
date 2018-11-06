@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 @Service
@@ -18,11 +19,13 @@ public class WeatherRequestServiceImpl implements WeatherRequestService {
     @Value("${weather.request.url}")
     private String blankUrl;
 
+    @Resource
+    private RestTemplate restTemplate;
+
     public Weather getWeather(String city) throws IOException {
         LOGGER.info("Getting weather info for city {}.", city);
         
         String url = String.format(blankUrl, city);
-        RestTemplate restTemplate = new RestTemplate();
         String response = restTemplate.getForObject(url, String.class);
 
         JsonNode jsonNode = new ObjectMapper().readTree(response);

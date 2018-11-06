@@ -17,12 +17,20 @@ public class WeatherDaoImpl implements WeatherDao {
 
     @Override
     public void save(Weather weather) {
-        sessionFactory.getCurrentSession().saveOrUpdate(weather);
+        Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+        session.saveOrUpdate(weather);
+        session.getTransaction().commit();
     }
 
     @Override
     public void delete(Weather weather) {
-        sessionFactory.getCurrentSession().delete(weather);
+        Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+        session.delete(weather);
+        session.getTransaction().commit();
     }
 
     @Override

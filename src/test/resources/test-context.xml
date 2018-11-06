@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <mvc:annotation-driven/>
+
+    <!--<context:component-scan-->
+            <!--base-package="com.dmitrii"/>-->
+
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <!--<mvc:default-servlet-handler/>-->
+
+    <tx:annotation-driven/>
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.dmitrii.model"/>
+        <property name="configLocation">
+            <value>classpath:hibernate.cfg.xml</value>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${jdbc.dialect}</prop>
+                <prop key="hibernate.connection.charSet">UTF-8</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+          p:driverClassName="${jdbc.driverClassName}"
+          p:url="${jdbc.databaseurl}"
+          p:username="${jdbc.username}"
+          p:password="${jdbc.password}"/>
+
+    <!--<bean id="viewResolver"-->
+          <!--class="org.springframework.web.servlet.view.UrlBasedViewResolver">-->
+        <!--<property name="viewClass"-->
+                  <!--value="org.springframework.web.servlet.view.JstlView"/>-->
+        <!--<property name="prefix" value="/WEB-INF/jsp/"/>-->
+        <!--<property name="suffix" value=".jsp"/>-->
+    <!--</bean>-->
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate"/>
+
+    <bean id="weatherRequestService" class="com.dmitrii.service.weather.WeatherRequestServiceImpl"/>
+
+    <bean id="weatherDao" class="com.dmitrii.dao.WeatherDaoImpl"/>
+
+    <!--&lt;!&ndash; JMS &ndash;&gt;-->
+    <!--<bean id="jndiTemplate" class="org.springframework.jndi.JndiTemplate">-->
+        <!--<property name="environment">-->
+            <!--<props>-->
+                <!--<prop key="java.naming.factory.initial">org.wildfly.naming.client.WildFlyInitialContextFactory</prop>-->
+                <!--<prop key="java.naming.provider.url">http-remoting://localhost:8080</prop>-->
+                <!--<prop key="java.naming.security.principal">myJmsUser</prop>-->
+                <!--<prop key="java.naming.security.credentials">myJmsPassword</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="weatherDestination" class="org.springframework.jndi.JndiObjectFactoryBean">-->
+        <!--<property name="jndiTemplate" ref="jndiTemplate"/>-->
+        <!--<property name="jndiName" value="java:/jms/topic/weatherTopic"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="jndiConnectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean">-->
+        <!--<property name="jndiTemplate" ref="jndiTemplate"/>-->
+        <!--<property name="jndiName" value="jms/RemoteConnectionFactory"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="connectionFactory"-->
+          <!--class="org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter">-->
+        <!--<property name="targetConnectionFactory" ref="jndiConnectionFactory"/>-->
+        <!--<property name="username" value="myJmsUser"/>-->
+        <!--<property name="password" value="myJmsPassword"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">-->
+        <!--<property name="connectionFactory" ref="connectionFactory"/>-->
+        <!--<property name="pubSubDomain" value="true"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">-->
+        <!--<property name="connectionFactory" ref="connectionFactory"/>-->
+        <!--<property name="destination" ref="weatherDestination"/>-->
+        <!--<property name="pubSubDomain" value="true"/>-->
+        <!--<property name="messageListener" ref="weatherMessageListener"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="weatherMessageListener" class="com.dmitrii.messaging.WeatherJmsListener"/>-->
+
+    <!--<bean id="messageConverter" class="org.springframework.jms.support.converter.SimpleMessageConverter"/>-->
+</beans>
