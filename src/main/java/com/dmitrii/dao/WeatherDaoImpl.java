@@ -4,9 +4,9 @@ import com.dmitrii.model.Weather;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 @Repository
 public class WeatherDaoImpl implements WeatherDao {
@@ -17,24 +17,17 @@ public class WeatherDaoImpl implements WeatherDao {
     @Override
     @Transactional
     public void save(Weather weather) {
-        Session session = sessionFactory.openSession();
-
-        session.beginTransaction();
-        session.saveOrUpdate(weather);
-        session.getTransaction().commit();
+        sessionFactory.getCurrentSession().saveOrUpdate(weather);
     }
 
     @Override
     @Transactional
     public void delete(Weather weather) {
-        Session session = sessionFactory.openSession();
-
-        session.beginTransaction();
-        session.delete(weather);
-        session.getTransaction().commit();
+        sessionFactory.getCurrentSession().delete(weather);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Weather findByCity(String city) {
         Session session = sessionFactory.openSession();
         return session.byNaturalId(Weather.class).using("city", city).load();
