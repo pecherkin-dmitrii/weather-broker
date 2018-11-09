@@ -77,7 +77,7 @@
 
     <bean id="weatherDestination" class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiTemplate" ref="jndiTemplate"/>
-        <property name="jndiName" value="java:/jms/topic/weatherTopic"/>
+        <property name="jndiName" value="jms/topic/weatherTopic"/>
     </bean>
 
     <bean id="jndiConnectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean">
