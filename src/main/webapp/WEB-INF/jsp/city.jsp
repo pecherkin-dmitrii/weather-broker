@@ -5,7 +5,7 @@
     </head>
 
     <body>
-        <form action="/weather-broker-1.0-SNAPSHOT/addCity">
+        <form action="/weather-broker/addCity">
                     Please enter the city: <input type="text" name="city">
                     <input type="submit" value="submit">
         </form>
